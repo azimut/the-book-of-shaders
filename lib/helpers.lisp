@@ -1,4 +1,61 @@
 (in-package :the-book-of-shaders)
+;; 02
+
+(defun-g g-plot ((st :vec2) (pct :float))
+  (- (smoothstep (- pct .02) pct (y st))
+     (smoothstep pct (+ pct .02) (y st))))
+
+;; 09
+
+(defun-g circle ((st :vec2) (radius :float))
+  (let ((l (- st .5)))
+    (- 1 (smoothstep (- radius (* radius .01))
+                     (+ radius (* radius .01))
+                     (* 4 (dot l l))))))
+
+(defun-g rotate-2d ((st :vec2) (angle :float))
+  (let* ((st (- st .5))
+         (st (* st (mat2 (cos angle) (- (sin angle))
+                         (sin angle) (cos angle))))
+         (st (+ st .5)))
+    st))
+
+(defun-g tile ((st :vec2) (zoom :float))
+  (fract (* zoom st)))
+
+(defun-g box
+    ((st :vec2) (size :vec2) (smooth-edges :float))
+  (let* ((size (- (v2! .5)
+                  (* .5 size)))
+         (aa   (v2! (* .5 smooth-edges)))
+         (uv   (smoothstep size (+ size aa) st))
+         (uv   (* uv (smoothstep size (+ size aa) (- (v2! 1f0) st)))))
+    (* (x uv) (y uv))))
+
+;; 10
+
+
+(defun-g g-random ((st :vec2))
+  (fract (* (sin (dot st
+                      (v! 12.9898
+                          78.233
+                          )))
+            43758.543123)))
+
+(defun-g g-random ((st :vec2) (time :float))
+  (fract (* (sin (dot st
+                      (v! 12.9898 ;; moves noise
+                          (tan time)      ;;;78.233
+                          )))
+;;;            43758.543123
+            (abs (* 2 (cos time)))
+            )))
+
+;; Deterministic random
+(defun-g g-rand ((x :float))
+  (fract (* (sin x)
+            100000f0)))
+
 
 ;; 13
 
@@ -6,6 +63,7 @@
   (- x (* (floor (* x (/ 1f0 289))) 289f0)))
 (defun-g mod289 ((x :vec2))
   (- x (* (floor (* x (/ 1f0 289))) 289f0)))
+
 (defun-g permute ((x :vec3))
   (mod289 (* x (+ 1f0 (* x 34f0)))))
 

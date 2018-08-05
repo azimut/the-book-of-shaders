@@ -17,11 +17,6 @@
 
 ;; https://pixelero.wordpress.com/2008/04/24/various-functions-and-various-distributions-with-mathrandom/
 
-;; Deterministic random
-(defun-g g-rand ((x :float))
-  (fract (* (sin x)
-            100000f0)))
-
 (defun-g frag ((uv :vec2) &uniform
                (resolution :vec2)
                (time :float))
@@ -39,22 +34,6 @@
 
 ;; Try changing the fixed values. See how the random pattern changes and think about what we can learn from this.
 ;; Hook this random function to the mouse interaction (u_mouse) and time (u_time) to understand better how it works.
-
-(defun-g g-random ((st :vec2))
-  (fract (* (sin (dot st
-                      (v! 12.9898
-                          78.233
-                          )))
-            43758.543123)))
-
-(defun-g g-random ((st :vec2) (time :float))
-  (fract (* (sin (dot st
-                      (v! 12.9898 ;; moves noise
-                          (tan time)      ;;;78.233
-                          )))
-;;;            43758.543123
-            (abs (* 2 (cos time)))
-            )))
 
 (defun-g frag ((uv :vec2) &uniform (resolution :vec2)
 

@@ -1,8 +1,5 @@
 (in-package :the-book-of-shaders)
 
-(defun-g g-plot ((st :vec2) (pct :float))
-  (- (smoothstep (- pct .02) pct (y st))
-     (smoothstep pct (+ pct .02) (y st))))
 
 (defun-g frag ((uv :vec2) &uniform (resolution :vec2)
                (time :float))
