@@ -123,14 +123,10 @@
 
 ;;--------------------------------------------------
 ;; HSB
+
 (defun-g frag ((uv :vec2) &uniform
                (resolution :vec2) (time :float))
   (let* ((st (/ (s~ gl-frag-coord :xy)
                 resolution))
-         (a (v! 1 1 1))
-         (b (v! 0 0 0))
-         (pct (v3! (step (y st) .33)
-                   (step (y st) .66)
-                   .9))
-         (color (mix a b pct)))
+         (color (hsb2rgb (v! (x st) 1 (y st)))))
     (v! color 0)))

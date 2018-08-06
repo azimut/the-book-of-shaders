@@ -1,10 +1,32 @@
 (in-package :the-book-of-shaders)
+
 ;; 02
 
 (defun-g g-plot ((st :vec2) (pct :float))
   (- (smoothstep (- pct .02) pct (y st))
      (smoothstep pct (+ pct .02) (y st))))
 
+;; 06
+
+(defun-g hsb2rgb ((c :vec3))
+  (let* ((rgb (clamp (- (abs (- (mod (+ (* (x c) 6) (v! 0 4 2)) 6) 3)) 1) 0 1))
+         (rgb (* rgb rgb (- 3 (* 2 rgb)))))
+    (* (z c) (mix (v3! 1) rgb (y c)))))
+
+(defun-g rgb2hsb ((c :vec3))
+  (let* ((k (v4! 0 (/ -1 3) (/ 2 3) -1))
+         (p (mix (v! (s~ c :bg) (s~ k :wz))
+                 (v! (s~ c :gb) (s~ k :xy))
+                 (step (b c) (g c))))
+         (q (mix (v! (s~ p :xyw) (r c))
+                 (v! (r c) (s~ p :yzx))
+                 (step (x p) (r c))))
+         (d (- (x q) (min (w q) (y q))))
+         (e (pow 1 -10)))
+    (v! (/ (abs (+ (z q) (- (w q) (y q))))
+           (+ e (* 6 d)))
+        (/ d (+ (x q) e))
+        (x q))))
 ;; 09
 
 (defun-g circle ((st :vec2) (radius :float))
@@ -34,7 +56,6 @@
 
 ;; 10
 
-
 (defun-g g-random ((st :vec2))
   (fract (* (sin (dot st
                       (v! 12.9898
@@ -55,7 +76,6 @@
 (defun-g g-rand ((x :float))
   (fract (* (sin x)
             100000f0)))
-
 
 ;; 13
 
